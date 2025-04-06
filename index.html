@@ -1,33 +1,51 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <title>Formulář GASTRORADWAN</title>
+  <meta charset="UTF-8">
+  <title>Protokolová aplikace</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 0.5em;
+    }
+    p {
+      font-size: 1.2em;
+      margin-bottom: 2em;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    img {
+      max-width: 150px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Formulář GASTRORADWAN</h1>
-  <form>
-    <label for="jmeno">Jméno a příjmení:</label><br />
-    <input type="text" id="jmeno" name="jmeno" required /><br /><br />
 
-    <label for="firma">Firma / organizace:</label><br />
-    <input type="text" id="firma" name="firma" /><br /><br />
+  <img src="logo.png" alt="Logo GASTRORADWAN">
 
-    <label for="email">E-mail:</label><br />
-    <input type="email" id="email" name="email" required /><br /><br />
+  <h1>Vítejte v aplikaci <strong>GASTRORADWAN</strong></h1>
+  <p>Protokoly, revize a školení online</p>
 
-    <label for="typ">Typ požadavku:</label><br />
-    <select id="typ" name="typ">
-      <option value="skoleni_znalych">Školení osob znalých (§6, §7, §8 dle NV 194/2022)</option>
-      <option value="revize">Revize elektro</option>
-      <option value="protokoly">Vyhotovení protokolů</option>
-      <option value="jine">Jiné</option>
-    </select><br /><br />
+  <a href="formular.html">
+    <button>Otevřít formulář</button>
+  </a>
 
-    <label for="zprava">Zpráva / poznámka:</label><br />
-    <textarea id="zprava" name="zprava" rows="4" cols="50"></textarea><br /><br />
-
-    <button type="submit">Odeslat</button>
-  </form>
 </body>
 </html>
