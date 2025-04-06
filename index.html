@@ -1,51 +1,59 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <title>Protokolová aplikace</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GASTRORADWAN – Úvod</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      padding: 40px;
-      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
     }
-    h1 {
-      font-size: 2em;
-      margin-bottom: 0.5em;
-    }
-    p {
-      font-size: 1.2em;
-      margin-bottom: 2em;
-    }
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
+    .container {
+      max-width: 700px;
+      margin: 100px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
     }
     img {
-      max-width: 150px;
+      max-width: 120px;
       margin-bottom: 20px;
+    }
+    h1 {
+      color: #111;
+    }
+    p {
+      font-size: 18px;
+      color: #333;
+    }
+    .btn {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 18px;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-
-  <img src="logo.png" alt="Logo GASTRORADWAN">
-
-  <h1>Vítejte v aplikaci <strong>GASTRORADWAN</strong></h1>
-  <p>Protokoly, revize a školení online</p>
-
-  <a href="formular.html">
-    <button>Otevřít formulář</button>
-  </a>
-
+  <div class="container">
+    <img src="logo.png" alt="Logo GASTRORADWAN" />
+    <h1>Vítejte v aplikaci <strong>GASTRORADWAN</strong></h1>
+    <p>Protokoly, revize a školení online</p>
+    <a href="formular.html" class="btn">Otevřít formulář</a>
+  </div>
 </body>
 </html>
