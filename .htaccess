@@ -1,0 +1,21 @@
+
+# Výchozí soubor
+DirectoryIndex index.html
+
+# Povolit přístup k běžným webovým souborům
+<FilesMatch "\.(html|css|js|png|jpg|jpeg|gif|svg|webp)$">
+  Require all granted
+</FilesMatch>
+
+# Přesměrování na HTTPS (volitelné - odkomentuj, pokud máš SSL)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Zákaz přístupu k citlivým souborům
+<FilesMatch "^(\.env|\.htaccess|config\.js)$">
+  Require all denied
+</FilesMatch>
+
+# Zákaz výpisu adresáře
+Options -Indexes

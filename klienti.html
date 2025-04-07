@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Správa klientů</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: sans-serif;
+      padding: 40px;
+    }
+    input, button {
+      margin-bottom: 10px;
+      padding: 8px;
+      width: 300px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>📁 Správa klientů</h1>
+  <div>
+    <label>Název firmy / jméno:</label><br />
+    <input type="text" id="name" /><br />
+    <label>Email klienta:</label><br />
+    <input type="email" id="email" /><br />
+    <label>Telefon:</label><br />
+    <input type="text" id="phone" /><br />
+    <button onclick="saveClient()">💾 Uložit klienta</button>
+  </div>
+
+  <h2>📋 Seznam klientů</h2>
+  <ul id="clientList">Načítám klienty...</ul>
+
+  <script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+      "https://srfadohfltldewiexpfg.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyZmFkb2hmbHRsZGV3aWV4cGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjAzNzEsImV4cCI6MjA1OTUzNjM3MX0.hx8FOabs21uUvcmemNNdzxQUUgXZHbWZ3JKBjh6YFB0"
+    );
+
+    async function saveClient() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+
+      const { error } = await supabase.from('clients').insert([{ name, email, phone }]);
+      if (error) {
+        alert("Chyba při ukládání: " + error.message);
+      } else {
+        alert("Klient uložen.");
+        loadClients();
+      }
+    }
+
+    async function loadClients() {
+      const list = document.getElementById('clientList');
+      list.innerHTML = "Načítám klienty...";
+      const { data, error } = await supabase.from('clients').select('*').order('id', { ascending: false });
+      if (error) {
+        list.innerHTML = "Chyba při načítání.";
+      } else {
+        list.innerHTML = "";
+        data.forEach(client => {
+          const li = document.createElement("li");
+          li.textContent = `${client.name} – ${client.email} – ${client.phone}`;
+          list.appendChild(li);
+        });
+      }
+    }
+
+    loadClients();
+  </script>
+</body>
+</html>

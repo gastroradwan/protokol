@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard | GASTRORADWAN</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: sans-serif;
+      padding: 40px;
+    }
+    .admin, .technik, .uzivatel {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #1e1e1e;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #ff4444;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dashboard <span style="color: #7CFC00;">GASTRORADWAN</span></h1>
+  <p id="status">Načítám informace o uživateli...</p>
+  <div class="admin">
+    <h2>Admin sekce</h2>
+    <ul>
+      <li>Správa uživatelů</li>
+      <li>Správa klientů</li>
+      <li>Přístup k testům</li>
+      <li>Statistiky</li>
+    </ul>
+  </div>
+  <div class="technik">
+    <h2>Technik</h2>
+    <ul>
+      <li>Moje revize</li>
+      <li>Vytvořit novou revizi</li>
+      <li>Klienti</li>
+      <li>Testy</li>
+    </ul>
+  </div>
+  <div class="uzivatel">
+    <h2>Uživatel</h2>
+    <ul>
+      <li>Přístup k testům</li>
+      <li>Můj přehled</li>
+    </ul>
+  </div>
+  <button onclick="logout()">Odhlásit se</button>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", checkRole);
+
+    async function checkRole() {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (!user) {
+        alert('Uživatel není přihlášen.');
+        window.location.href = "login.html";
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", user.id);
+
+      if (error) {
+        alert("Chyba při načítání role");
+        console.error(error);
+        return;
+      }
+
+      if (!data || data.length !== 1) {
+        alert("Nebyla nalezena přesně jedna role pro uživatele.");
+        console.log("Výsledek dotazu:", data);
+        return;
+      }
+
+      const role = data[0].role;
+      document.getElementById("status").textContent = `Přihlášený UID: ${user.id} (role: ${role})`;
+
+      if (role === "admin") {
+        document.querySelector(".admin").style.display = "block";
+      } else if (role === "technik") {
+        document.querySelector(".technik").style.display = "block";
+      } else if (role === "uzivatel") {
+        document.querySelector(".uzivatel").style.display = "block";
+      }
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
