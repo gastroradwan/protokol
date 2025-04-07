@@ -46,42 +46,51 @@
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
 
-        // Krok 1: Registrace do Supabase Auth
-        const { data, error } = await supabase.auth.signUp({
+        // Krok 1: registrace do Supabase Auth
+        const { data: signupData, error: signupError } = await supabase.auth.signUp({
           email,
           password
         });
 
-        if (error) {
-          alert('Registrace selhala: ' + error.message);
+        if (signupError) {
+          alert('Registrace selhala: ' + signupError.message);
+          console.error(signupError);
           return;
         }
 
-        const user = data.user;
-        const uid = user?.id || user?.uid;
+        const user = signupData.user;
 
-        // Krok 2: INSERT do vlastní tabulky users
+        if (!user || !user.id) {
+          alert('Registrace byla úspěšná, ale účet musí být potvrzen e-mailem.');
+          window.location.href = 'login.html';
+          return;
+        }
+
+        const uid = user.id;
+
+        // Krok 2: zapsat do tabulky users
         const { error: insertError } = await supabase
           .from('users')
           .insert([
             {
-              uid: uid,
-              email: email,
-              name: name,
+              uid,
+              email,
+              name,
               role: 'uzivatel'
             }
           ]);
 
         if (insertError) {
-          alert('Registrace uživatele proběhla, ale nepodařilo se uložit do databáze: ' + insertError.message);
+          alert('Registrace proběhla, ale nepodařilo se uložit do databáze: ' + insertError.message);
+          console.error(insertError);
           return;
         }
 
-        alert('Registrace proběhla úspěšně. Nyní se můžete přihlásit.');
+        alert('Registrace byla úspěšná. Nyní se můžete přihlásit.');
         window.location.href = 'login.html';
       });
     });
