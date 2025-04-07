@@ -1,73 +1,49 @@
-<!DOCTYPE html>
-<html lang="cs">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Registrace | GASTRORADWAN</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header>
-    <div class="container header-content">
-      <h1>GASTRORADWAN</h1>
-      <nav>
-        <a href="index.html">Úvod</a>
-        <a href="login.html">Přihlášení</a>
-        <a href="signup.html">Registrace</a>
-      </nav>
-    </div>
-  </header>
+<script type="module">
+  import { supabase } from './supabase-config.js';
 
-  <section class="hero">
-    <div class="container" style="max-width: 400px;">
-      <h2 style="text-align:center;">Registrace uživatele</h2>
-      <form id="signup-form">
-        <input type="text" placeholder="Jméno" required style="width:100%; padding:10px; margin:10px 0;"/>
-        <input type="email" placeholder="E-mail" required style="width:100%; padding:10px; margin:10px 0;"/>
-        <input type="password" placeholder="Heslo" required style="width:100%; padding:10px; margin:10px 0;"/>
-        <button type="submit" class="btn" style="width:100%;">Zaregistrovat se</button>
-      </form>
-    </div>
-  </section>
+  const form = document.getElementById('signup-form');
 
-  <footer>
-    <div class="container">
-      <p>© 2025 GASTRORADWAN s.r.o. | Ostravská 262, 73562 Český Těšín – Mosty</p>
-    </div>
-  </footer>
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-  <script type="module">
-    import { supabase } from './supabase-config.js';
+    const inputs = form.querySelectorAll('input');
+    const email = inputs[1].value;
+    const password = inputs[2].value;
 
-    const form = document.getElementById('signup-form');
+    // 1️⃣ Registrace uživatele
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password
+    });
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    if (signUpError) {
+      alert('Registrace selhala: ' + signUpError.message);
+      return;
+    }
 
-      const inputs = form.querySelectorAll('input');
-      const name = inputs[0].value;
-      const email = inputs[1].value;
-      const password = inputs[2].value;
+    // 2️⃣ Po registraci získáme UID uživatele
+    const user = signUpData.user;
 
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: email,
-        password: password
+    if (!user) {
+      alert('Registrace proběhla, ale nelze získat UID. Zkontrolujte potvrzení e-mailu.');
+      return;
+    }
+
+    // 3️⃣ Uložení do tabulky `users`
+    const { error: insertError } = await supabase
+      .from('users')
+      .insert({
+        uid: user.id,
+        email: user.email,
+        role: 'uzivatel'
       });
 
-      if (signUpError) {
-        alert('Registrace selhala: ' + signUpError.message);
-        return;
-      }
+    if (insertError) {
+      alert('Registrace částečně úspěšná – nepodařilo se uložit roli: ' + insertError.message);
+    } else {
+      alert('Registrace proběhla úspěšně. Nyní se přihlaste.');
+    }
 
-      const uid = signUpData.user.id;
-
-      const { error: insertError } = await supabase
-        .from('users')
-        .insert([{ uid: uid, email: email, role: 'uzivatel' }]);
-
-      if (insertError) {
-        alert('Uživatel byl zaregistrován, ale nepodařilo se uložit roli.');
-        console.error(insertError);
-      } else {
-        alert('Registrace proběhla úspěšně. Nyní se př
+    window.location.href = 'login.html';
+  });
+</script>
