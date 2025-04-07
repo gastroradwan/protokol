@@ -14,7 +14,7 @@
       <nav>
         <a href="index.html">Úvod</a>
         <a href="login.html">Přihlášení</a>
-        <a href="signup.html">Registrace</a>
+        <a href="signup.html" class="active">Registrace</a>
       </nav>
     </div>
   </header>
@@ -23,9 +23,9 @@
     <div class="container" style="max-width: 400px;">
       <h2 style="text-align:center;">Registrace uživatele</h2>
       <form id="signup-form">
-        <input type="text" placeholder="Jméno" required />
-        <input type="email" placeholder="E-mail" required />
-        <input type="password" placeholder="Heslo" required />
+        <input type="text" id="name" placeholder="Jméno" required />
+        <input type="email" id="email" placeholder="E-mail" required />
+        <input type="password" id="password" placeholder="Heslo" required />
         <button type="submit" class="btn">Zaregistrovat se</button>
       </form>
     </div>
@@ -37,35 +37,27 @@
     </div>
   </footer>
 
-  <!-- Funkční JS pro registraci -->
   <script type="module">
     import { supabase } from './supabase-config.js';
 
-    window.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('signup-form');
-
-      if (!form) {
-        console.error('Formulář nebyl nalezen.');
-        return;
-      }
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const inputs = form.querySelectorAll('input');
-        const name = inputs[0].value;
-        const email = inputs[1].value;
-        const password = inputs[2].value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
 
         const { data, error } = await supabase.auth.signUp({
-          email: email,
-          password: password
+          email,
+          password
         });
 
         if (error) {
           alert('Registrace selhala: ' + error.message);
         } else {
-          alert('Registrace proběhla úspěšně. Nyní se přihlaste.');
+          alert('Registrace úspěšná. Nyní se můžete přihlásit.');
           window.location.href = 'login.html';
         }
       });
