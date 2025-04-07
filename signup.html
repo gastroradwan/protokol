@@ -46,23 +46,28 @@
       e.preventDefault();
 
       const inputs = form.querySelectorAll('input');
-      const name = inputs[0].value; // uložíme si jméno, ale zatím nepoužijeme
+      const name = inputs[0].value;
       const email = inputs[1].value;
       const password = inputs[2].value;
 
-      const { data, error } = await supabase.auth.signUp({
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: email,
         password: password
       });
 
-      if (error) {
-        alert('Registrace selhala: ' + error.message);
-      } else {
-        alert('Registrace proběhla úspěšně. Nyní se přihlaste.');
-        window.location.href = 'login.html';
+      if (signUpError) {
+        alert('Registrace selhala: ' + signUpError.message);
+        return;
       }
-    });
-  </script>
 
-</body>
-</html>
+      const uid = signUpData.user.id;
+
+      const { error: insertError } = await supabase
+        .from('users')
+        .insert([{ uid: uid, email: email, role: 'uzivatel' }]);
+
+      if (insertError) {
+        alert('Uživatel byl zaregistrován, ale nepodařilo se uložit roli.');
+        console.error(insertError);
+      } else {
+        alert('Registrace proběhla úspěšně. Nyní se př
