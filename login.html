@@ -1,68 +1,39 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Přihlášení | GASTRORADWAN</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
-  <style>
-    body {
-      background-color: #121212;
-      color: white;
-      font-family: sans-serif;
-      padding: 40px;
-    }
-    input, button {
-      display: block;
-      margin-top: 10px;
-      padding: 10px;
-      font-size: 16px;
-    }
-    #msg {
-      margin-top: 20px;
-      color: #ff4444;
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Přihlášení do systému GASTRORADWAN</h1>
-  <input type="email" id="email" placeholder="Email" />
-  <input type="password" id="password" placeholder="Heslo" />
-  <button onclick="login()">Přihlásit se</button>
-  <p id="msg"></p>
+  <header>
+    <div class="container header-content">
+      <h1>GASTRORADWAN</h1>
+      <nav>
+        <a href="index.html">Úvod</a>
+        <a href="login.html">Přihlášení</a>
+        <a href="signup.html">Registrace</a>
+      </nav>
+    </div>
+  </header>
 
-  <script>
-    async function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const msg = document.getElementById("msg");
+  <section class="hero">
+    <div class="container" style="max-width: 400px;">
+      <h2 style="text-align:center;">Přihlášení do systému</h2>
+      <form id="login-form">
+        <input type="email" placeholder="E-mail" required style="width:100%; padding:10px; margin:10px 0;"/>
+        <input type="password" placeholder="Heslo" required style="width:100%; padding:10px; margin:10px 0;"/>
+        <button type="submit" class="btn" style="width:100%;">Přihlásit se</button>
+      </form>
+    </div>
+  </section>
 
-      const { data: { user }, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        msg.innerText = "❌ Chyba při přihlášení: " + error.message;
-        return;
-      }
-
-      // Zapsat do tabulky 'users', pokud už není
-      const { error: insertError } = await supabase
-        .from('users')
-        .upsert([{ id: user.id, email: user.email, role: 'uzivatel' }], { onConflict: 'id' });
-
-      if (insertError) {
-        msg.innerText = "⚠️ Přihlášeno, ale chyba při zapsání do databáze.";
-        console.error(insertError);
-      } else {
-        msg.innerText = "✅ Přihlášení proběhlo úspěšně. Přesměrování...";
-      }
-
-      setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 1000);
-    }
-  </script>
+  <footer>
+    <div class="container">
+      <p>© 2025 GASTRORADWAN s.r.o. | Ostravská 262, 73562 Český Těšín – Mosty</p>
+    </div>
+  </footer>
 </body>
 </html>
