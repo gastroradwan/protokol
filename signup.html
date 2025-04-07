@@ -46,9 +46,11 @@
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
+        // Krok 1: Registrace do Supabase Auth
         const { data, error } = await supabase.auth.signUp({
           email,
           password
@@ -56,10 +58,31 @@
 
         if (error) {
           alert('Registrace selhala: ' + error.message);
-        } else {
-          alert('Registrace úspěšná. Nyní se můžete přihlásit.');
-          window.location.href = 'login.html';
+          return;
         }
+
+        const user = data.user;
+        const uid = user?.id || user?.uid;
+
+        // Krok 2: INSERT do vlastní tabulky users
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert([
+            {
+              uid: uid,
+              email: email,
+              name: name,
+              role: 'uzivatel'
+            }
+          ]);
+
+        if (insertError) {
+          alert('Registrace uživatele proběhla, ale nepodařilo se uložit do databáze: ' + insertError.message);
+          return;
+        }
+
+        alert('Registrace proběhla úspěšně. Nyní se můžete přihlásit.');
+        window.location.href = 'login.html';
       });
     });
   </script>
