@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>Dashboard | GASTRORADWAN</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
   <style>
     body {
       background-color: #121212;
@@ -32,6 +30,7 @@
 <body>
   <h1>Dashboard <span style="color: #7CFC00;">GASTRORADWAN</span></h1>
   <p id="status">Načítám informace o uživateli...</p>
+
   <div class="admin">
     <h2>Admin sekce</h2>
     <ul>
@@ -41,6 +40,7 @@
       <li>Statistiky</li>
     </ul>
   </div>
+
   <div class="technik">
     <h2>Technik</h2>
     <ul>
@@ -50,6 +50,7 @@
       <li>Testy</li>
     </ul>
   </div>
+
   <div class="uzivatel">
     <h2>Uživatel</h2>
     <ul>
@@ -57,13 +58,17 @@
       <li>Můj přehled</li>
     </ul>
   </div>
-  <button onclick="logout()">Odhlásit se</button>
 
-  <script>
+  <button id="logout">Odhlásit se</button>
+
+  <script type="module">
+    import { supabase } from './supabase-config.js';
+
     document.addEventListener("DOMContentLoaded", checkRole);
 
     async function checkRole() {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
+
       if (!user) {
         alert('Uživatel není přihlášen.');
         window.location.href = "login.html";
@@ -73,21 +78,16 @@
       const { data, error } = await supabase
         .from("users")
         .select("role")
-        .eq("id", user.id);
+        .eq("uid", user.id)
+        .single();
 
-      if (error) {
-        alert("Chyba při načítání role");
+      if (error || !data) {
+        document.getElementById("status").textContent = "Nepodařilo se načíst roli.";
         console.error(error);
         return;
       }
 
-      if (!data || data.length !== 1) {
-        alert("Nebyla nalezena přesně jedna role pro uživatele.");
-        console.log("Výsledek dotazu:", data);
-        return;
-      }
-
-      const role = data[0].role;
+      const role = data.role;
       document.getElementById("status").textContent = `Přihlášený UID: ${user.id} (role: ${role})`;
 
       if (role === "admin") {
@@ -99,10 +99,10 @@
       }
     }
 
-    async function logout() {
+    document.getElementById("logout").addEventListener("click", async () => {
       await supabase.auth.signOut();
       window.location.href = "login.html";
-    }
+    });
   </script>
 </body>
 </html>
