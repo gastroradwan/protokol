@@ -2,58 +2,48 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GASTRORADWAN – Úvod</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-    }
-    .container {
-      max-width: 700px;
-      margin: 100px auto;
-      padding: 30px;
-      background-color: #fff;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-    img {
-      max-width: 120px;
-      margin-bottom: 20px;
-    }
-    h1 {
-      color: #111;
-    }
-    p {
-      font-size: 18px;
-      color: #333;
-    }
-    .btn {
-      margin-top: 30px;
-      padding: 15px 30px;
-      font-size: 18px;
-      color: #fff;
-      background-color: #007bff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GASTRORADWAN s.r.o.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <img src="logo.png" alt="Logo GASTRORADWAN" />
-    <h1>Vítejte v aplikaci <strong>GASTRORADWAN</strong></h1>
-    <p>Protokoly, revize a školení online</p>
-    <a href="formular.html" class="btn">Otevřít formulář</a>
-  </div>
+  <header>
+    <div class="container header-content">
+      <h1>GASTRORADWAN</h1>
+      <nav>
+        <a href="#">Úvod</a>
+        <a href="login.html">Přihlášení</a>
+        <a href="#sluzby">Služby</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h2>Profesionální revize a školení</h2>
+      <p>Specialisté na elektrorevize, školení a gastro vybavení.</p>
+      <a href="login.html" class="btn">Přejít do systému</a>
+    </div>
+  </section>
+
+  <section id="sluzby" class="services">
+    <div class="container">
+      <h3>Naše služby</h3>
+      <ul>
+        <li>Revize elektrických zařízení</li>
+        <li>Školení elektrotechniků a poučených osob</li>
+        <li>Prodej a servis gastro vybavení</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer id="kontakt">
+    <div class="container">
+      <p>© 2025 GASTRORADWAN s.r.o. | Ostravská 262, 73562 Český Těšín – Mosty</p>
+      <p>Email: info@gastroradwan.eu</p>
+    </div>
+  </footer>
 </body>
 </html>
