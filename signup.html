@@ -46,41 +46,23 @@
       e.preventDefault();
 
       const inputs = form.querySelectorAll('input');
-      const name = inputs[0].value;
+      const name = inputs[0].value; // uložíme si jméno, ale zatím nepoužijeme
       const email = inputs[1].value;
       const password = inputs[2].value;
 
-      const { data: signupData, error: signupError } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: email,
-        password: password,
-        options: {
-          data: { name: name }
-        }
+        password: password
       });
 
-      if (signupError) {
-        alert('Registrace selhala: ' + signupError.message);
-        return;
+      if (error) {
+        alert('Registrace selhala: ' + error.message);
+      } else {
+        alert('Registrace proběhla úspěšně. Nyní se přihlaste.');
+        window.location.href = 'login.html';
       }
-
-      const user = signupData.user;
-
-      const { error: insertError } = await supabase.from('users').insert([
-        {
-          uid: user.id,
-          name: name,
-          role: 'uzivatel'
-        }
-      ]);
-
-      if (insertError) {
-        alert('Chyba při ukládání do databáze: ' + insertError.message);
-        return;
-      }
-
-      alert('Registrace proběhla úspěšně. Nyní se přihlaste.');
-      window.location.href = 'login.html';
     });
   </script>
+
 </body>
 </html>
