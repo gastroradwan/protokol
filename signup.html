@@ -36,5 +36,35 @@
       <p>© 2025 GASTRORADWAN s.r.o. | Ostravská 262, 73562 Český Těšín – Mosty</p>
     </div>
   </footer>
+  <script type="module">
+  import { supabase } from './supabase-config.js';
+
+  const form = document.getElementById('signup-form');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const inputs = form.querySelectorAll('input');
+    const name = inputs[0].value;
+    const email = inputs[1].value;
+    const password = inputs[2].value;
+
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: { name: name }
+      }
+    });
+
+    if (error) {
+      alert('Registrace selhala: ' + error.message);
+    } else {
+      alert('Registrace proběhla úspěšně. Nyní se přihlaste.');
+      window.location.href = 'login.html';
+    }
+  });
+</script>
+
 </body>
 </html>
