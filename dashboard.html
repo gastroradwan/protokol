@@ -1,108 +1,53 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard | GASTRORADWAN</title>
-  <style>
-    body {
-      background-color: #121212;
-      color: white;
-      font-family: sans-serif;
-      padding: 40px;
-    }
-    .admin, .technik, .uzivatel {
-      display: none;
-      margin-top: 20px;
-      padding: 20px;
-      background: #1e1e1e;
-      border-radius: 5px;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #ff4444;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Dashboard <span style="color: #7CFC00;">GASTRORADWAN</span></h1>
-  <p id="status">Načítám informace o uživateli...</p>
+  <header>
+    <div class="container header-content">
+      <h1>GASTRORADWAN – Dashboard</h1>
+      <button id="logout" class="btn" style="float:right;">Odhlásit se</button>
+    </div>
+  </header>
 
-  <div class="admin">
-    <h2>Admin sekce</h2>
-    <ul>
-      <li>Správa uživatelů</li>
-      <li>Správa klientů</li>
-      <li>Přístup k testům</li>
-      <li>Statistiky</li>
-    </ul>
-  </div>
+  <main class="container">
+    <h2 id="welcome-msg">Načítám informace o uživateli...</h2>
+    <div id="content"></div>
+  </main>
 
-  <div class="technik">
-    <h2>Technik</h2>
-    <ul>
-      <li>Moje revize</li>
-      <li>Vytvořit novou revizi</li>
-      <li>Klienti</li>
-      <li>Testy</li>
-    </ul>
-  </div>
-
-  <div class="uzivatel">
-    <h2>Uživatel</h2>
-    <ul>
-      <li>Přístup k testům</li>
-      <li>Můj přehled</li>
-    </ul>
-  </div>
-
-  <button id="logout">Odhlásit se</button>
+  <footer>
+    <div class="container">
+      <p>© 2025 GASTRORADWAN s.r.o.</p>
+    </div>
+  </footer>
 
   <script type="module">
     import { supabase } from './supabase-config.js';
 
-    document.addEventListener("DOMContentLoaded", checkRole);
-
-    async function checkRole() {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+    async function loadDashboard() {
+      const { data: { user }, error } = await supabase.auth.getUser();
 
       if (!user) {
-        alert('Uživatel není přihlášen.');
-        window.location.href = "login.html";
+        window.location.href = 'login.html';
         return;
       }
 
-      const { data, error } = await supabase
-        .from("users")
-        .select("role")
-        .eq("uid", user.id)
+      const uid = user.id;
+
+      const { data, error: fetchError } = await supabase
+        .from('users')
+        .select('name, role, email')
+        .eq('uid', uid)
         .single();
 
-      if (error || !data) {
-        document.getElementById("status").textContent = "Nepodařilo se načíst roli.";
-        console.error(error);
+      if (fetchError || !data) {
+        document.getElementById('welcome-msg').textContent = 'Nepodařilo se načíst údaje o uživateli.';
+        console.error(fetchError);
         return;
       }
 
-      const role = data.role;
-      document.getElementById("status").textContent = `Přihlášený UID: ${user.id} (role: ${role})`;
-
-      if (role === "admin") {
-        document.querySelector(".admin").style.display = "block";
-      } else if (role === "technik") {
-        document.querySelector(".technik").style.display = "block";
-      } else if (role === "uzivatel") {
-        document.querySelector(".uzivatel").style.display = "block";
-      }
-    }
-
-    document.getElementById("logout").addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      window.location.href = "login.html";
-    });
-  </script>
-</body>
-</html>
+      const { name, role, email } = data;
