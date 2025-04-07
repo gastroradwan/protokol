@@ -1,49 +1,32 @@
 <script type="module">
   import { supabase } from './supabase-config.js';
 
-  const form = document.getElementById('signup-form');
+  window.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('signup-form');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const inputs = form.querySelectorAll('input');
-    const email = inputs[1].value;
-    const password = inputs[2].value;
-
-    // 1️⃣ Registrace uživatele
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password
-    });
-
-    if (signUpError) {
-      alert('Registrace selhala: ' + signUpError.message);
+    if (!form) {
+      console.error('Formulář nebyl nalezen.');
       return;
     }
 
-    // 2️⃣ Po registraci získáme UID uživatele
-    const user = signUpData.user;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-    if (!user) {
-      alert('Registrace proběhla, ale nelze získat UID. Zkontrolujte potvrzení e-mailu.');
-      return;
-    }
+      const inputs = form.querySelectorAll('input');
+      const email = inputs[1].value;
+      const password = inputs[2].value;
 
-    // 3️⃣ Uložení do tabulky `users`
-    const { error: insertError } = await supabase
-      .from('users')
-      .insert({
-        uid: user.id,
-        email: user.email,
-        role: 'uzivatel'
+      const { data, error } = await supabase.auth.signUp({
+        email: email,
+        password: password
       });
 
-    if (insertError) {
-      alert('Registrace částečně úspěšná – nepodařilo se uložit roli: ' + insertError.message);
-    } else {
-      alert('Registrace proběhla úspěšně. Nyní se přihlaste.');
-    }
-
-    window.location.href = 'login.html';
+      if (error) {
+        alert('Registrace selhala: ' + error.message);
+      } else {
+        alert('Registrace proběhla úspěšně. Nyní se přihlaste.');
+        window.location.href = 'login.html';
+      }
+    });
   });
 </script>
