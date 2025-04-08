@@ -51,3 +51,42 @@
       }
 
       const { name, role, email } = data;
+      document.getElementById('welcome-msg').textContent = `Přihlášen jako: ${name} (${role})`;
+
+      const content = document.getElementById('content');
+
+      if (role === 'admin') {
+        content.innerHTML = `
+          <h3>Administrátorské funkce</h3>
+          <ul>
+            <li>Správa uživatelů</li>
+            <li>Statistiky a protokoly</li>
+            <li>Nastavení systému</li>
+          </ul>
+        `;
+      } else if (role === 'technik') {
+        content.innerHTML = `
+          <h3>Technik – moje revize</h3>
+          <ul>
+            <li><a href="moje-revize.html">Zobrazit revize</a></li>
+            <li><a href="novy-protokol.html">Vytvořit nový protokol</a></li>
+          </ul>
+        `;
+      } else {
+        content.innerHTML = `
+          <h3>Uživatelský přehled</h3>
+          <p>Zde najdete své školení a testy.</p>
+          <a href="testy.html" class="btn">Spustit testy</a>
+        `;
+      }
+    }
+
+    document.getElementById('logout').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.href = 'login.html';
+    });
+
+    loadDashboard();
+  </script>
+</body>
+</html>
